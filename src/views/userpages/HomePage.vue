@@ -94,7 +94,7 @@
         </div>
 
         <!-- 相关链接 -->
-        <div class="appcart">
+        <div class="appcart related-link">
             <h2 class="block-header">
                 <i class="iconfont icon-icon-taikong8 icon" style="color: gold"></i>
                 <span>相关链接</span>
@@ -372,58 +372,65 @@ onBeforeMount(() => {
     }
 }
 
-.shortcut-wrap {
-    display: flex;
-    justify-content: space-between;
+.related-link{
+    //width:100%;
 
-    .shortcut {
-        display: inline-block;
-        width: 80px;
-        height: 80px;
-        padding: 20px;
+    .shortcut-wrap {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
 
-        .s1 {
-            background-color: rgb(233, 188, 128);
-        }
-        .s2 {
-            background-color: rgb(175, 212, 115);
-        }
-        .s3 {
-            background-color: rgb(115, 206, 150);
-        }
-        .s4 {
-            background-color: rgb(113, 206, 190);
-        }
-        .s5 {
-            background-color: rgb(122, 173, 221);
-        }
-        .s6 {
-            background-color: rgb(138, 112, 207);
-        }
-        .s7 {
-            background-color: rgb(211, 119, 173);
-        }
+        .shortcut {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            padding: 20px;
 
-        .icon-wrap {
-            height: 60px;
-            width: 60px;
-            line-height: 60px;
-            margin: auto;
-            text-align: center;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-
-            i {
-                font-size: 22px;
+            .s1 {
+                background-color: rgb(233, 188, 128);
             }
-        }
+            .s2 {
+                background-color: rgb(175, 212, 115);
+            }
+            .s3 {
+                background-color: rgb(115, 206, 150);
+            }
+            .s4 {
+                background-color: rgb(113, 206, 190);
+            }
+            .s5 {
+                background-color: rgb(122, 173, 221);
+            }
+            .s6 {
+                background-color: rgb(138, 112, 207);
+            }
+            .s7 {
+                background-color: rgb(211, 119, 173);
+            }
 
-        p {
-            font-size: @baseSize;
-            text-align: center;
-            margin-top: 12px;
+            .icon-wrap {
+                height: 60px;
+                width: 60px;
+                line-height: 60px;
+                margin: auto;
+                text-align: center;
+                border-radius: 10px;
+                cursor: pointer;
+                color: white;
+
+                i {
+                    font-size: 22px;
+                }
+            }
+
+            p {
+                font-size: @baseSize;
+                text-align: center;
+                margin-top: 12px;
+            }
         }
     }
 }
+
+
 </style>
