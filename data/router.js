@@ -348,7 +348,7 @@ router.get('/myInform/:num',(req,res)=>{
         infoList.push({
             infoType:myInform.infoType[random_int(0,4)],
             info:myInform.infoList[random_int(0,6)],
-            date:(date.getMonth()+1)+"-"+(date.getDate()-i),
+            date:(date.getMonth()+1)+"-"+(date.getDate()),
             id:i,
         })
     }
@@ -365,7 +365,7 @@ router.get('/getNotice/:num',(req,res)=>{
         noticeList.push({
             infoType:notice.infoType[random_int(0,4)],
             info:notice.infoList[random_int(0,6)],
-            date:(date.getMonth()+1)+"-"+(date.getDate()-i),
+            date:(date.getMonth()+1)+"-"+(date.getDate()),
             id:i,
         })
     }
@@ -383,7 +383,7 @@ router.get('/getMyArrange/:num',(req,res)=>{
         arrangeList.push({
             text:myArrange.text1[textType]+myArrange.text2[textType][random_int(0,3)],
             area:textType!=2 ? myArrange.area[random_int(0,3)]+random_int(1,6)+"0"+random_int(1,9) : '行政楼B1',
-            date:(date.getMonth()+1)+"-"+(date.getDate()-i),
+            date:(date.getMonth()+1)+"-"+(date.getDate()),
             id:i,
         })
     }
