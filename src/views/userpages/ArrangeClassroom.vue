@@ -5,7 +5,7 @@
 
             <!-- 预约的教室列表 -->
             <button class="reserve-bt" @click="addReserveShow = true">添加预约 +</button>
-            <table class="apptable">
+            <table class="apptable revarse-table">
                 <tr>
                     <th>预约日期</th>
                     <th>区域</th>
@@ -17,12 +17,12 @@
                 <tr v-show="roomList.list.length == 0"><td class="nodata" colspan="5"> No Data </td></tr>
                 <tr v-for="item in roomList.list" :key="item.id">
                     <td>{{ item.date }}</td>
-                    <td>{{ item.area }}</td>
+                    <td>{{ areaMap[item.area] }}</td>
                     <td>{{ item.Cid }}</td>
                     <td class="time-slot"><span v-for="i in item.timeSlot" class="timeslot-span" :key="i">{{ i }}</span></td>
                     <td>
                         <span class="check" :class="{ 'check-true': item.check == 'true', 'check-false': item.check == 'false', 'check-wait': item.check == 'wait' }">
-                            {{checkMap[item.check]}}
+                            {{ checkMap[item.check] }}
                         </span>
                     </td>
                     <td>
@@ -40,10 +40,10 @@
 
                     <div class="mes-div">
                         <SelectBlock atr="月份" describe="请选择月份" v-model="reserveParams.month">
-                            <li v-for="i in 3">{{ date.getMonth() + i }}</li>
+                            <li v-for="i in 3" :key="i">{{ date.getMonth() + i }}</li>
                         </SelectBlock>
                         <SelectBlock atr="日期" describe="请选择日期" v-model="reserveParams.day" :change="getUsableClassroom">
-                            <li v-for="i in dataLimt">{{ i }}</li>
+                            <li v-for="i in dataLimt" :key="i">{{ i }}</li>
                         </SelectBlock>
                     </div>
                     <div class="mes-div">
@@ -54,13 +54,13 @@
                     </div>
                     <div class="mes-div">
                         <SelectBlock atr="校区" describe="请选择校区" v-model="reserveParams.campus" :change="getUsableClassroom">
-                            <li>东区</li>
-                            <li>主校区</li>
-                            <li>启林</li>
-                            <li>西校区</li>
+                            <li svalue="ds">东区</li>
+                            <li svalue="zq">主校区</li>
+                            <li svalue="ql">启林</li>
+                            <li svalue="xq">西校区</li>
                         </SelectBlock>
                         <SelectBlock atr="教室" describe="可用教室" v-model="reserveParams.Cid">
-                            <li v-for="item in reserveParams.Cidlist">{{ item }}</li>
+                            <li v-for="item in reserveParams.Cidlist" :key="item">{{ item }}</li>
                         </SelectBlock>
                     </div>
                     <div class="mes-div">
@@ -113,8 +113,8 @@ const route = useRoute();
 const date = new Date();
 //获取输入年月的天数
 function getDayLimt(year, month) {
-    if (month == 2) {
-        if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) {
+    if (month === 2) {
+        if (year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0)) {
             return 29;
         } else return 28;
     }
@@ -127,10 +127,6 @@ var areaMap = {
     zq: "主校区",
     ql: "启林",
     xq: "西校区",
-    东区: "ds",
-    主校区: "zq",
-    启林: "ql",
-    西校区: "xq",
 };
 const checkMap = {
     wait: "审核中",
@@ -160,14 +156,14 @@ const reserveParams = reactive({
 //获取预约信息
 async function getdata() {
     let result = await reReserveClassroom();
-    if (result.code == 200) {
+    if (result.code && result.code === 200) {
         roomList.list = result.data;
     } else console.log("err", result);
 }
 
 //添加或删除节次
 function changeTimeSlot(value, isRemove = false) {
-    if (reserveParams.timeslot.indexOf(value * 1) == -1 && reserveParams.timeslot.length < 3) reserveParams.timeslot.push(value * 1);
+    if (reserveParams.timeslot.indexOf(value * 1) === -1 && reserveParams.timeslot.length < 3) reserveParams.timeslot.push(value * 1);
     if (isRemove) {
         let index = reserveParams.timeslot.indexOf(value * 1);
         reserveParams.timeslot.splice(index, 1);
@@ -183,11 +179,11 @@ async function getUsableClassroom() {
         let params = {
             month: reserveParams.month,
             day: reserveParams.day,
-            area: areaMap[reserveParams.campus],
+            area: reserveParams.campus,
             timeslot: reserveParams.timeslot,
         };
         let result = await reUsableClassroom(params);
-        if (result.code == 200) {
+        if (result.code && result.code === 200) {
             reserveParams.Cidlist = result.data.Cidlist;
         } else console.log(result);
     }
@@ -199,13 +195,13 @@ async function addReserve() {
         let params = {
             month: reserveParams.month,
             day: reserveParams.day,
-            area: areaMap[reserveParams.campus],
+            area: reserveParams.campus,
             timeSlot: reserveParams.timeslot,
             Cid: reserveParams.Cid,
             remark: reserveParams.remark,
         };
         const result = await reAddReserveClassroom(params);
-        if (result.code == 200) {
+        if (result.code && result.code === 200) {
             getdata();
             Bus.$emit("popMes", { type: "success", text: "添加预约成功" });
         } else console.log("addReserve-err", result);
@@ -222,7 +218,7 @@ function showRemove(id) {
 async function removeReserve() {
     if (!deleteId) return console.log("删除元素id错误");
     const result = await reDeleteReserve(deleteId);
-    if (result.code == 200) {
+    if (result.code && result.code === 200) {
         getdata();
         Bus.$emit("popMes", { type: "success", text: "删除成功" });
     } else console.log("删除失败", result);
@@ -234,7 +230,7 @@ async function getDetail(id) {
     reserveDetail.value = null;
     detailShow.value = true;
     const result = await reGetReserveDetail(id);
-    if (result.code == 200) {
+    if (result.code && result.code === 200) {
         reserveDetail.value = result.data.remark;
     } else console.log("获取详情失败", result);
 }
@@ -291,39 +287,60 @@ onBeforeMount(() => {
         background-color: @theme-main-color2;
     }
 }
-
-.time-slot {
-    width: 20%;
-
-    .timeslot-span {
-        display: inline-block;
-        background-color: rgb(241, 241, 241);
-        outline: 1px solid rgb(196, 196, 196);
-        color: rgb(104, 104, 104);
-        padding: 4px 8px;
-        margin: 0px 12px;
-        border-radius: 2px;
+.revarse-table {
+    tr:hover {
+        background: rgb(245, 245, 245);
     }
-}
 
-.check {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 12px;
-}
-.check-true {
-    background-color: rgb(235, 255, 236);
-    color: rgb(91, 173, 95);
-}
-.check-false {
-    background-color: rgb(255, 240, 240);
-    color: rgb(218, 114, 114);
-}
-.check-wait {
-    background-color: rgb(236, 245, 255);
-    color: rgb(107, 172, 247);
+    .time-slot {
+        width: 20%;
+
+        .timeslot-span {
+            display: inline-block;
+            font-size: 12px;
+            background-color: rgb(243, 241, 241);
+            outline: 1px solid rgb(218, 216, 216);
+            color: rgb(129, 129, 129);
+            padding: 3px 8px;
+            margin: 2px 6px;
+            border-radius: 2px;
+        }
+    }
+
+    .check {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .check-true {
+        background-color: rgb(235, 255, 236);
+        color: rgb(91, 173, 95);
+    }
+    .check-false {
+        background-color: rgb(255, 240, 240);
+        color: rgb(218, 114, 114);
+    }
+    .check-wait {
+        background-color: rgb(236, 245, 255);
+        color: rgb(107, 172, 247);
+    }
+
+    .detail-bt,
+    .remove-bt {
+        display: inline-block;
+        font-size: 12px;
+        margin: 0px 12px;
+        padding: 6px 12px;
+        border-radius: 2px;
+        cursor: pointer;
+        background-color: rgb(233, 143, 143);
+        color: rgb(255, 255, 255);
+    }
+    .detail-bt {
+        background-color: @theme-main-color1;
+    }
 }
 
 .add-reserve {
@@ -367,23 +384,7 @@ onBeforeMount(() => {
     }
 }
 
-.detail-bt,
-.remove-bt {
-    display: inline-block;
-    font-size: 12px;
-    margin: 0px 12px;
-    padding: 6px 12px;
-    border-radius: 2px;
-    cursor: pointer;
-    background-color: rgb(233, 143, 143);
-    color: rgb(255, 255, 255);
-}
-.detail-bt {
-    background-color: @theme-main-color1;
-}
-
 .rese-detail {
     padding-bottom: 26px !important;
 }
-
 </style>

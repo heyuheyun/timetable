@@ -36,7 +36,7 @@
 
 <script setup>
 import SelectBlock from "@/components/SelectBlock.vue";
-import { ref, reactive, watch } from "vue";
+import { reactive } from "vue";
 import { reCourseStudentList } from "@/api/user";
 
 const data = reactive({
@@ -48,7 +48,7 @@ const data = reactive({
 //获取学生信息
 async function getCourseStudentList() {
     const result = await reCourseStudentList(data.course);
-    if (result.code == 200) {
+    if (result.code && result.code === 200) {
         data.CourseStudentList = result.data;
     } else console.log("err", result);
 }

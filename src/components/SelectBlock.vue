@@ -5,7 +5,7 @@
             <span v-show="!modelValue">
                 {{ describe }}
             </span>
-            <span else>{{ modelValue }}</span>
+            <span v-show="modelValue">{{ showValue }}</span>
 
             <ul class="option" ref="option">
                 <slot>
@@ -20,12 +20,13 @@
 
 <script setup>
 /*
-    传入参数{
+    params{
         modelValue: 组件绑定的值
         atr: 属性名
         describe: 属性描述
         change: 组件的值改变时触发的回调函数
     }
+    插槽内<li>标签的自定义属性svalue：若存在则组件绑定的值为svalue，否则绑定值为<li>标签的innerHLML
 */
 import { ref, onMounted } from "vue";
 
@@ -39,18 +40,19 @@ const props = defineProps({
     change: Function,
 });
 const emit = defineEmits(["update:modelValue"]);
+const showValue=ref(props.modelValue);
 
 //展开选项
 function showSelect(isShow) {
     if (isShow) {
         if (option.value.scrollHeight > 200) {
-            if (option.value.style.maxHeight != "200px") {
+            if (option.value.style.maxHeight !== "200px") {
                 option.value.style.maxHeight = "200px";
                 option.value.style.overflow = "auto";
                 return;
             }
         } else {
-            if (option.value.style.maxHeight != option.value.scrollHeight + 1 + "px") {
+            if (option.value.style.maxHeight !== option.value.scrollHeight + 1 + "px") {
                 option.value.style.maxHeight = option.value.scrollHeight + 1 + "px";
                 foldIcon.value.className = "iconfont icon icon-packup";
                 return;
@@ -68,7 +70,13 @@ onMounted(() => {
         let options = option.value.children;
         for (let i = 0; i < options.length; i++) {
             options[i].onmousedown = () => {
-                emit("update:modelValue", options[i].innerHTML);
+                if(options[i].getAttribute('svalue')){
+                    //如果有自定义属性svalue，则作为绑定值返回
+                    emit("update:modelValue", options[i].getAttribute('svalue'));
+                }else{
+                    emit("update:modelValue", options[i].innerHTML);
+                }
+                showValue.value=options[i].innerHTML;
                 //如果绑定了选项改变的函数
                 if (props.change) props.change(options[i].innerHTML);
             };
@@ -98,7 +106,7 @@ onMounted(() => {
     .select {
         display: inline-block;
         position: relative;
-        margin: 0px 12px 0px 12px;
+        margin: 3px 12px 3px 12px;
         width: 156px;
         color: rgb(175, 175, 175);
         outline: 1px solid rgb(216, 216, 216);

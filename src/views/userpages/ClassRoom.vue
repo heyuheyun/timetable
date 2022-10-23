@@ -2,10 +2,10 @@
     <div class="appmain">
         <div class="appcart selcart">
             <SelectBlock atr="校区" describe="请选择校区" v-model="selParams.campus" :change="classRoomQuery">
-                <li>东区</li>
-                <li>主校区</li>
-                <li>启林</li>
-                <li>西校区</li>
+                <li svalue="ds">东区</li>
+                <li svalue="zq">主校区</li>
+                <li svalue="ql">启林</li>
+                <li svalue="xq">西校区</li>
             </SelectBlock>
             <SelectBlock atr="月份" describe="请选择月份" v-model="selParams.month">
                 <li v-for="i in 3">{{ date.getMonth() + i }}</li>
@@ -52,6 +52,7 @@ import { reClassRoomQuery } from "@/api/common.js";
 import { ref, reactive, watch } from "vue";
 import { useRouter } from "vue-router";
 import Pagination from "@/components/Pagination.vue";
+import Bus from "@/utils/bus";
 
 const router = useRouter();
 const date = new Date();
@@ -71,10 +72,6 @@ var areaMap = {
     zq: "主校区",
     ql: "启林",
     xq: "西校区",
-    东区: "ds",
-    主校区: "zq",
-    启林: "ql",
-    西校区: "xq",
 };
 
 const selParams = reactive({
@@ -101,7 +98,7 @@ function changePage(value) {
 async function classRoomQuery() {
     if (selParams.campus && selParams.month && selParams.day) {
         let params = {
-            classArea: areaMap[selParams.campus],
+            classArea: selParams.campus,
             month: selParams.month,
             day: selParams.day,
             page: classRoomQueryList.pageNo,
@@ -118,7 +115,10 @@ async function classRoomQuery() {
 
 //跳转预定教室页面
 function reserveRoom(item) {
-    if (item.arrangeList[selParams.timeslot * 1] != "空闲") return;
+    if (item.arrangeList[selParams.timeslot * 1] != "空闲"){
+        Bus.$emit('popMes',{type:'err',text:'当前教室不可用'});
+        return;
+    } 
     router.push({
         name: "ArrangeClassroom",
         params: {

@@ -2,8 +2,8 @@
     <div class="appmain">
         <div class="appcart selcart">
             <div class="selmode-wrap">
-                <span class="selmode" :class="{ active: data.selMode == 'week' }" @click="changeMode('week')">按周次查询</span>
-                <span class="selmode" :class="{ active: data.selMode == 'course' }" @click="changeMode('course')">按课程查询</span>
+                <span class="selmode" :class="{ active: data.selMode === 'week' }" @click="changeMode('week')">按周次查询</span>
+                <span class="selmode" :class="{ active: data.selMode === 'course' }" @click="changeMode('course')">按课程查询</span>
             </div>
             <SelectBlock atr="学期" describe="请选择" v-model="data.semester">
                 <li>第一学期</li>
@@ -79,7 +79,7 @@ import { reTeachSchedule } from "@/api/user";
 
 /*
     此组件写的较早，模拟的数据较有规律且简单，且数据在后台写死无随机性
-    学生部分的课程表更适应无规律的课程安排，数据随机模拟，实现方案更简洁
+    学生部分的课程表更适应无规律的课程安排，数据随机模拟
 */
 
 const defaultSpanRule_ = [
@@ -113,7 +113,7 @@ function changeMode(mode) {
 
 function updataSpanRule(courseList) {
     arList.spanRule = JSON.parse(defaultSpanRule);
-    if (courseList.length == 0) return;
+    if (courseList.length === 0) return;
     let continue_ = 0;
     for (let item of courseList) {
         continue_ = item.weekArrange.length - 1;
@@ -143,12 +143,12 @@ function updataList(courseList) {
 
 async function updata() {
     const result = await reTeachSchedule({ ...data });
-    if (result.code && result.code == 200) {
+    if (result.code && result.code === 200) {
         if (data.selMode == "week") {
             updataSpanRule(result.data);
             updataList(result.data);
         }
-        if (data.selMode == "course") {
+        if (data.selMode === "course") {
             arList.modeCourseData = result.data;
             arList.modeCourseData.arrange = result.data.arrange.filter(item => {
                 return item.length > 0;

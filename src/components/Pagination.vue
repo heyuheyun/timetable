@@ -41,7 +41,7 @@
 <script>
 /*
     此组件在初学vue2时封装，故使用vue2写法。
-    所需的参数{
+    params{
         current_page: 当前页
         totel_page: 总页数
         continues: 显示的连续页码数，一般为3、5、7

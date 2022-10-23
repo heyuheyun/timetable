@@ -59,7 +59,7 @@ const data = reactive({
 //获取课程数据
 async function updataData() {
     const result = await reOptionCourse();
-    if (result.code && result.code == 200) {
+    if (result.code && result.code === 200) {
         data.courseList = result.data;
     } else console.log("err", result);
 }
@@ -82,7 +82,7 @@ async function addCourse() {
     });
     data.toBeSelect = null;
     data.maskShow = false;
-    if (result.code && result.code == 200) {
+    if (result.code && result.code === 200) {
         Bus.$emit("popMes", { type: "success", text: "选课成功" });
         updataData();
     } else console.log("err", result);
