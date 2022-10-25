@@ -14,19 +14,15 @@
             <Navbar />
             <!-- 面包屑 -->
             <TagViews />
-            <!-- appmain -->
+            <!-- AppMain -->
             <div class="appmain-wrap" :class="{ 'fix-header': setStore.fixNavbar }">
                 <AppMain />
             </div>
         </div>
 
         <!-- 项目设置 -->
-        <div class="mask" v-show="setStore.setShow" @click="setStore.setShow = false"></div>
-        <Transition name="fade">
-            <div class="setting" v-show="setStore.setShow">
-                <Setting />
-            </div>
-        </Transition>
+        <Setting />
+           
     </div>
 </template>
 
@@ -79,32 +75,5 @@ userStore.getUserRoutes();
             overflow-x: hidden;
         }
     }
-
-    .setting {
-        position: absolute;
-        right: 0%;
-        height: 100%;
-        z-index: 9;
-    }
-
-    .mask {
-        position: absolute;
-        left: 0%;
-        top: 0%;
-        width: 100%;
-        height: 100%;
-        z-index: 5;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-    transition: transform 0.5s, opacity 0.5s;
-}
-.fade-enter-from,
-.fade-leave-to {
-    transform: translateX(100%);
-    opacity: 0;
 }
 </style>
