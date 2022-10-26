@@ -1,7 +1,7 @@
 <template>
     <router-view v-slot="{ Component }">
         <transition name="page-fade" mode="out-in">
-            <keep-alive :include="cacheViews.keepAliveName">
+            <keep-alive :include="keepAliveName.join(',')">
                 <component :key="route.name" :is="Component" />
             </keep-alive>
         </transition>
@@ -11,13 +11,10 @@
 <script setup>
 import { watch } from "vue";
 import { useRoute } from "vue-router";
-import { useCacheViews } from "@/store";
+import { cacheViewList, keepAliveName } from '@/utils/cacheViews';
 
 const route = useRoute();
-const cacheViews = useCacheViews();
 const reloadList = ["/404", "/401", "/login"];
-
-cacheViews.initCache();
 
 watch(
     () => route.path,
@@ -26,9 +23,12 @@ watch(
         if (reloadList.indexOf(value) != -1) location.reload();
         //如果新的路由可被缓存则加入缓存
         if (route.meta && route.meta.cache) {
-            if (cacheViews.keepAliveName.indexOf(route.name) == -1) {
-                cacheViews.cacheViewList.push(route);
-                cacheViews.keepAliveName.push(route.name);
+            if (!keepAliveName.includes(route.name)) {
+                cacheViewList.push({
+                    name:route.name,
+                    path:route.path,
+                    meta:JSON.parse(JSON.stringify(route.meta)),
+                });
             }
         }
     }

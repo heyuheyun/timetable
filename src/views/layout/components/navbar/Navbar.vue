@@ -63,14 +63,14 @@
 <script setup>
 import { reactive, watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useUserStore, useSetStore, useCacheViews } from "@/store";
+import { useUserStore, useSetStore } from "@/store";
 import { reLogout } from "@/api/common.js";
+import { initCache } from '@/utils/cacheViews';
 
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 const setStore = useSetStore();
-const cacheViews = useCacheViews();
 
 const showSize = ref();
 const fontDiv = ref();
@@ -203,7 +203,7 @@ function selectRole(role) {
     });
     userStore.userRoutes = showMenu;
     //初始缓存
-    cacheViews.initCache();
+    initCache();
     router.push("/");
 }
 

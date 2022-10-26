@@ -35,7 +35,7 @@ const routes = [
         children:[
             {
                 path:'homepage',
-                name:'Homepage',
+                name:'HomePage',
                 component : () => import( '@/views/userpages/HomePage.vue' ),
                 meta:{ title:'首页' , icon:"icon-shouye" , limit:["admin","teacher","student"] , fixCache:true }
             },
@@ -67,7 +67,7 @@ const routes = [
                 children:[
                     {
                         path:'classroom-query',
-                        name:'Classroom',
+                        name:'ClassRoom',
                         component : () => import( '@/views/userpages/ClassRoom.vue' ),
                         meta:{ title:'教室查询' , icon:"" , limit:["admin","teacher","student"] , cache:true },
                     },
@@ -112,8 +112,8 @@ const routes = [
                 meta:{ title:'学生信息' , icon:"icon-xuesheng" , limit:["teacher"] , cache:true }
             },
             {
-                path:'teching',
-                name:'Teching',
+                path:'teaching',
+                name:'Teaching',
                 component : () => import( '@/views/userpages/teacher/Teaching.vue' ),
                 meta:{ title:'教学安排' , icon:"icon-calendar-alt" , limit:["teacher"] , cache:true }
             },

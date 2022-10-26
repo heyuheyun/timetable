@@ -66,32 +66,3 @@ export const useSetStore=defineStore("set",{
         }
     },
 })
-
-//当前缓存的路由项
-export const useCacheViews=defineStore("cacheViews",{
-    state:()=>{
-        return {
-            cacheViewList:[],
-            keepAliveName:[],
-        }
-    },
-    actions:{
-        initCache(){
-            this.cacheViewList=[];
-            this.keepAliveName=[];
-            const userStore = useUserStore();
-            let checkRoutes=(routes)=>{
-                for(let item of routes){
-                    if(item.children && item.children.length>0)    checkRoutes(item.children);
-                    else {
-                        if(item.meta.fixCache)  this.cacheViewList.push(item);
-                    }
-                }
-            }
-            checkRoutes(userStore.userRoutes);
-            for(let item of this.cacheViewList){
-                if(item.name) this.keepAliveName.push(item.name);
-            }
-        }
-    }
-})

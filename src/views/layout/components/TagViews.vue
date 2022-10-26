@@ -8,17 +8,17 @@
 </template>
 
 <script setup>
-import { useUserStore, useSetStore, useCacheViews } from "@/store";
+import { useUserStore, useSetStore } from "@/store";
 import { reactive, watch, onBeforeMount } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { cacheViewList,initCache } from '@/utils/cacheViews';
 
 const route = useRoute();
 const router = useRouter();
-const cacheViews = useCacheViews();
 const userStore = useUserStore();
 const setStore = useSetStore();
 
-cacheViews.initCache();
+initCache();
 
 const data = reactive({
     tagList: [],
@@ -27,7 +27,7 @@ const data = reactive({
 //根据缓存列表初始化标签列表
 function initTag() {
     data.tagList = [];
-    cacheViews.cacheViewList.forEach(item => {
+    cacheViewList.forEach(item => {
         data.tagList.push({
             title: item.meta.title,
             name: item.name,
@@ -42,13 +42,12 @@ function closeTag(index) {
     //如果当前标签是一个缓存项，则清除缓存
     if (data.tagList[index].isCache) {
         let tagName = data.tagList[index].name;
-        for (let i in cacheViews.cacheViewList) {
-            if (cacheViews.cacheViewList[i].name == tagName) {
-                cacheViews.cacheViewList.splice(i, 1);
+        for (let i in cacheViewList) {
+            if (cacheViewList[i].name === tagName) {
+                cacheViewList.splice(i, 1);
                 break;
             }
         }
-        cacheViews.keepAliveName.splice(cacheViews.keepAliveName.indexOf(tagName), 1);
     }
     data.tagList.splice(index, 1);
     if (index - 1 >= 0) {
