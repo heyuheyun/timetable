@@ -2,7 +2,7 @@ import { useUserStore } from "@/store";
 
 const arrMethods = Object.create(Array.prototype);
 const cacheViewList = Object.create(arrMethods);
-const keepAliveName = [];   //要缓存的组件名称数组，由cacheViewList自动维护，使用时直接读取即可
+const keepAliveName = [];       //要缓存的组件名称数组
 const addFn = ["push", "unshift"];
 const delFn = ["pop", "shift"];
 
@@ -46,6 +46,15 @@ arrMethods.splice = function (index, howmany, ...items) {
                 }
             }
         }
+    }
+    if (items.length > 0) {
+        items.forEach(item => {
+            if (Object.prototype.toString.call(item) === "[object Object]") {
+                if (item.meta.cache && item.name) {
+                    if (!keepAliveName.includes(item.name)) keepAliveName.push(item.name);
+                }
+            }
+        });
     }
     return Array.prototype.splice.call(this, index, howmany, ...items);
 };
