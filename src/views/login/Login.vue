@@ -16,11 +16,11 @@
 
             <!-- 角色选择 -->
             <div class="role-wrap">
-                <input type="radio" id="student" value="student" v-model="logindata.role">
+                <input type="radio" id="student" value="student" v-model="logindata.role" />
                 <label for="student">学生</label>
-                <input type="radio" id="teacher" value="teacher" v-model="logindata.role">
+                <input type="radio" id="teacher" value="teacher" v-model="logindata.role" />
                 <label for="teacher">教师</label>
-                <input type="radio" id="admin" value="admin" v-model="logindata.role">
+                <input type="radio" id="admin" value="admin" v-model="logindata.role" />
                 <label for="admin">管理员</label>
             </div>
 
@@ -45,24 +45,20 @@ const iconHide = ref();
 const logindata = reactive({
     account: "admin",
     password: "123456",
-    role:"student",
+    role: "student",
 });
 
 //改变密码显示状态
 function changPasswordShow() {
-    passwordInput.value.type = passwordInput.value.type == "password" ? "text" : "password";
+    passwordInput.value.type = passwordInput.value.type === "password" ? "text" : "password";
     iconHide.value.className = iconHide.value.className.indexOf("icon-hide") > -1 ? "iconfont icon-browse icon" : "iconfont icon-hide icon";
 }
 
 //处理登录请求
 async function loginHandle() {
-    let params = {
-        account: logindata.account,
-        password: logindata.password,
-        role:logindata.role,
-    };
-    let result = await reLogin(params);
-    if (result.code == 200) {
+    const params = { ...logindata };
+    const result = await reLogin(params);
+    if (result.code && result.code === 200) {
         userStore.updataToken(result.data.token);
         let result2 = await userStore.updataUserInfo();
         if (result2) router.push("/");
@@ -73,8 +69,8 @@ async function loginHandle() {
 <style lang="less" scoped>
 .login-wrapper {
     background-image: url("@/assets/imgs/login_back.jpg");
-    background-position:center;
-    background-size:cover;
+    background-position: center;
+    background-size: cover;
     width: 100%;
     height: 100vh;
     position: relative;
@@ -103,7 +99,7 @@ async function loginHandle() {
         .input-wrapper {
             box-sizing: border-box;
             margin: 22px auto;
-            background-color: rgba(255, 255, 255,.1);
+            background-color: rgba(255, 255, 255, 0.1);
             width: 400px;
             height: 50px;
             outline: 0.5px solid rgba(235, 235, 235, 0.3);
@@ -144,47 +140,47 @@ async function loginHandle() {
             }
         }
 
-        .role-wrap{
-            width:400px;
-            height:30px;
+        .role-wrap {
+            width: 400px;
+            height: 30px;
             line-height: 30px;
-            margin:-10px auto;
+            margin: -10px auto;
             text-align: left;
 
-            input[type="radio"]{
+            input[type="radio"] {
                 display: none;
             }
-            input[type="radio"]:checked+label::after{      
-                position: absolute;  
-                content: "✔";  
+            input[type="radio"]:checked + label::after {
+                position: absolute;
+                content: "✔";
                 font-size: 8px;
-                left:-6px;
-                color:rgb(142, 190, 138);
+                left: -6px;
+                color: rgb(142, 190, 138);
             }
-            label{
+            label {
                 position: relative;
-                color:white;
+                color: white;
                 font-size: 14px;
                 margin-left: 8px;
                 margin-right: 16px;
-                &:before{      
+                &:before {
                     display: inline-block;
-                    position: relative;   
-                    left: -8px;   
-                    top:2px;  
-                    width: 14px;     
-                    height: 14px;  
-                    border: 1px solid rgba(207, 236, 204, 0.5); 
-                    border-radius: 4px;      
-                    content: "";  
+                    position: relative;
+                    left: -8px;
+                    top: 2px;
+                    width: 14px;
+                    height: 14px;
+                    border: 1px solid rgba(207, 236, 204, 0.5);
+                    border-radius: 4px;
+                    content: "";
                     cursor: pointer;
-                    box-sizing: border-box;    
+                    box-sizing: border-box;
                 }
             }
         }
 
         .loginbt {
-            background-color: rgba(116, 185, 110,.9);
+            background-color: rgba(116, 185, 110, 0.9);
             border: 0;
             color: white;
             margin: 25px 10px;

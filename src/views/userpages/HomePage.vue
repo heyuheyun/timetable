@@ -77,7 +77,7 @@
                         <th>节次</th>
                         <th>进度</th>
                     </tr>
-                    <tr v-show="data.roomList.length == 0"><td class="nodata" colspan="5"> No Data </td></tr>
+                    <tr v-show="data.roomList.length === 0"><td class="nodata" colspan="5"> No Data </td></tr>
                     <tr v-for="item in data.roomList" :key="item.id">
                         <td>{{ item.date }}</td>
                         <td>{{ item.area }}</td>
@@ -166,8 +166,8 @@ const welcomeMessage = computed(() => {
 
 //获取我的信息
 async function getMyInfo(num = 5) {
-    let result = await reMyInform(num);
-    if (result.code == 200) {
+    const result = await reMyInform(num);
+    if (result.code && result.code === 200) {
         data.myInfoList = result.data;
     } else {
         console.log("err!");
@@ -175,8 +175,8 @@ async function getMyInfo(num = 5) {
 }
 //获取公告
 async function getnotice(num = 5) {
-    let result = await reGetNotice(num);
-    if (result.code == 200) {
+    const result = await reGetNotice(num);
+    if (result.code && result.code === 200) {
         data.noticeList = result.data;
     } else {
         console.log("err!");
@@ -184,8 +184,8 @@ async function getnotice(num = 5) {
 }
 //获取最近安排
 async function getMyArrange(num = 5) {
-    let result = await reMyArrange(num);
-    if (result.code == 200) {
+    const result = await reMyArrange(num);
+    if (result.code && result.code === 200) {
         data.myArrange = result.data;
     } else {
         console.log("err!");
@@ -193,7 +193,7 @@ async function getMyArrange(num = 5) {
 }
 //获取教室预约列表
 async function getRoomList(num = 7) {
-    let result = await reReserveClassroom();
+    const result = await reReserveClassroom();
     if (result.code && result.code == 200) {
         if (result.data.length < num) data.roomList = result.data;
         else data.roomList = result.data.slice(0, num);

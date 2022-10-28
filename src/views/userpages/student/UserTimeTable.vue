@@ -2,16 +2,16 @@
     <div class="appmain">
         <div class="appcart selcart">
             <div class="selmode-wrap">
-                <span class="selmode" :class="{ active: params.selMode == 'week' }" @click="changeMode('week')">按周次查询</span>
-                <span class="selmode" :class="{ active: params.selMode == 'course' }" @click="changeMode('course')">按课程查询</span>
+                <span class="selmode" :class="{ active: params.selMode === 'week' }" @click="changeMode('week')">按周次查询</span>
+                <span class="selmode" :class="{ active: params.selMode === 'course' }" @click="changeMode('course')">按课程查询</span>
             </div>
             <SelectBlock atr="学期" describe="请选择" v-model="params.semester">
                 <li>第一学期</li>
             </SelectBlock>
-            <SelectBlock atr="周次" describe="请选择" v-model="params.selParam" v-show="params.selMode == 'week'" :change="updata">
+            <SelectBlock atr="周次" describe="请选择" v-model="params.selParam" v-show="params.selMode === 'week'" :change="updata">
                 <li v-for="i in 16">{{ i }}</li>
             </SelectBlock>
-            <SelectBlock atr="课程" describe="请选择" v-model="params.selParam" v-show="params.selMode == 'course'" :change="updata">
+            <SelectBlock atr="课程" describe="请选择" v-model="params.selParam" v-show="params.selMode === 'course'" :change="updata">
                 <li>蔬菜栽培学(各论)</li>
                 <li>园艺产品储运学</li>
                 <li>插花艺术</li>
@@ -24,7 +24,7 @@
 
         <transition name="cart-fade" mode="out-in">
             <!-- 周次模式视图 -->
-            <div class="appcart" v-if="params.selMode == 'week'" key="week">
+            <div class="appcart" v-if="params.selMode === 'week'" key="week">
                 <table class="apptable week-table">
                     <tr>
                         <th class="timeslot">节次</th>
@@ -121,7 +121,7 @@ function siteWeekItem() {
     data.weekItemSite = {};
     data.weekList.forEach(item => {
         let index = item.arrange.day.toString() + item.arrange.timeslot[0];
-        data.weekItemSite[index] = item;
+        Object.assign(data.weekItemSite,{ [index]:item })
     });
 }
 
@@ -144,7 +144,7 @@ async function updata() {
 //计算表格的跨行规则
 const spanRule = computed(() => {
     //初始化7*13的二维数组，数组中的项表示对应周次对应节次的表格跨行数
-    let spanRule = new Array(7).fill(0).map(item => new Array(13).fill(0));
+    const spanRule = new Array(7).fill(0).map(item => new Array(13).fill(0));
     for (let item of data.weekList) {
         //课程占用的节次
         let slotLen = item.arrange.timeslot.length;
@@ -164,11 +164,11 @@ const spanRule = computed(() => {
                 } else {
                     if (day < 5) {
                         //如果是非周末，则除11-13节外，尽可能的跨两行
-                        if (!spanRule[day][i + 1] && i != 5 && i + 1 != 4 && i + 1 != 10) usableLen = 2;
+                        if (!spanRule[day][i + 1] && i !== 5 && i + 1 !== 4 && i + 1 !== 10) usableLen = 2;
                     } else {
                         //如果是周六日，则在1-4节、7-10节，尽可能的跨4行
                         let lenLimit = 4;
-                        if (i == 4 || i == 5) lenLimit = 6 - i;
+                        if (i === 4 || i === 5) lenLimit = 6 - i;
                         for (; !spanRule[day][i + usableLen] && usableLen < lenLimit && i + 1 != 4 && i + 1 != 10; usableLen++);
                     }
                 }

@@ -68,9 +68,9 @@ const themeWrap = ref();
 
 //改变主题
 function setTheme(name, event) {
-    let spanList = themeWrap.value.children;
+    const spanList = themeWrap.value.children;
     for (let i = 0; i < spanList.length; i++) {
-        if (spanList[i].className.indexOf("active") != -1) {
+        if (spanList[i].className.indexOf("active") !== -1) {
             spanList[i].className = spanList[i].className.replace("active", "");
         }
     }

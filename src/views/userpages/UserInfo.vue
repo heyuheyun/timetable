@@ -114,8 +114,8 @@ const data = reactive({
 
 //获取登录历史
 async function getHistory(page = 1) {
-    let result = await reLogHistory(page);
-    if (result.code == 200) {
+    const result = await reLogHistory(page);
+    if (result.code && result.code === 200) {
         data.historyList = result.data.logHistoryList;
     } else {
         console.log("err!");

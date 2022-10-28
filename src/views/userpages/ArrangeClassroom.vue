@@ -14,7 +14,7 @@
                     <th>进度</th>
                     <th>预约操作</th>
                 </tr>
-                <tr v-show="roomList.list.length == 0"><td class="nodata" colspan="5"> No Data </td></tr>
+                <tr v-show="roomList.list.length === 0"><td class="nodata" colspan="5"> No Data </td></tr>
                 <tr v-for="item in roomList.list" :key="item.id">
                     <td>{{ item.date }}</td>
                     <td>{{ areaMap[item.area] }}</td>
@@ -118,11 +118,11 @@ function getDayLimt(year, month) {
             return 29;
         } else return 28;
     }
-    let dayList = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const dayList = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     return dayList[month - 1];
 }
-var dataLimt = ref(getDayLimt(date.getFullYear(), date.getMonth() + 1));
-var areaMap = {
+const dataLimt = ref(getDayLimt(date.getFullYear(), date.getMonth() + 1));
+const areaMap = {
     ds: "东区",
     zq: "主校区",
     ql: "启林",
@@ -134,12 +134,12 @@ const checkMap = {
     false: "审核未通过",
 };
 
-var addReserveShow = ref(false);
-var removeReserveShow = ref(false);
-var detailShow = ref(false);
-var reserveDetail = ref(null);
-var deleteId = null;
-var forbidWatchMonth = false;
+const addReserveShow = ref(false);
+const removeReserveShow = ref(false);
+const detailShow = ref(false);
+const reserveDetail = ref(null);
+let deleteId = null;
+let forbidWatchMonth = false;
 const roomList = reactive({
     list: [],
 });
@@ -155,7 +155,7 @@ const reserveParams = reactive({
 
 //获取预约信息
 async function getdata() {
-    let result = await reReserveClassroom();
+    const result = await reReserveClassroom();
     if (result.code && result.code === 200) {
         roomList.list = result.data;
     } else console.log("err", result);
@@ -176,13 +176,13 @@ async function getUsableClassroom() {
     reserveParams.Cidlist = [];
     reserveParams.Cid = "";
     if (reserveParams.campus && reserveParams.month && reserveParams.day && reserveParams.timeslot.length > 0) {
-        let params = {
+        const params = {
             month: reserveParams.month,
             day: reserveParams.day,
             area: reserveParams.campus,
             timeslot: reserveParams.timeslot,
         };
-        let result = await reUsableClassroom(params);
+        const result = await reUsableClassroom(params);
         if (result.code && result.code === 200) {
             reserveParams.Cidlist = result.data.Cidlist;
         } else console.log(result);
@@ -192,14 +192,7 @@ async function getUsableClassroom() {
 //增加预约
 async function addReserve() {
     if (reserveParams.Cid) {
-        let params = {
-            month: reserveParams.month,
-            day: reserveParams.day,
-            area: reserveParams.campus,
-            timeSlot: reserveParams.timeslot,
-            Cid: reserveParams.Cid,
-            remark: reserveParams.remark,
-        };
+        const params = { ...reserveParams };
         const result = await reAddReserveClassroom(params);
         if (result.code && result.code === 200) {
             getdata();

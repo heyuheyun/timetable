@@ -1,5 +1,5 @@
 export function getToken(){
-    let token=sessionStorage.getItem("TOKEN");
+    const token=sessionStorage.getItem("TOKEN");
     return token;
 }
 

@@ -67,7 +67,7 @@ function showSelect(isShow) {
 onMounted(() => {
     //给选项绑定点击事件
     function addClick() {
-        let options = option.value.children;
+        const options = option.value.children;
         for (let i = 0; i < options.length; i++) {
             options[i].onmousedown = () => {
                 if(options[i].getAttribute('svalue')){

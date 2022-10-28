@@ -42,8 +42,8 @@ const data = reactive({
 });
 
 async function getHistory(page = 1) {
-    let result = await reLogHistory(page);
-    if (result.code == 200) {
+    const result = await reLogHistory(page);
+    if (result.code && result.code === 200) {
         data.historyList = result.data.logHistoryList;
         data.pageNo = result.data.pageNo * 1;
         data.totalPage = result.data.totalPage * 1;

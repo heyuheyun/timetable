@@ -28,8 +28,7 @@ const barWrap = ref();
 const headDiv = ref();
 const menuTip=ref();
 const tipText=ref();
-
-var menuHover = ref(false);
+const menuHover = ref(false);
 
 userStore.getUserRoutes();
 

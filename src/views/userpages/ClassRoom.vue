@@ -33,7 +33,7 @@
                     <td>{{ item.Cid }}</td>
                     <td>{{ selParams.timeslot }}</td>
                     <td>{{ item.arrangeList[selParams.timeslot * 1] }}</td>
-                    <td><button class="reserve-bt" :class="{ banbt: item.arrangeList[selParams.timeslot * 1] != '空闲' }" @click="reserveRoom(item)">预 定</button></td>
+                    <td><button class="reserve-bt" :class="{ banbt: item.arrangeList[selParams.timeslot * 1] !== '空闲' }" @click="reserveRoom(item)">预 定</button></td>
                 </tr>
             </table>
 
@@ -63,11 +63,11 @@ function getDayLimt(year, month) {
             return 29;
         } else return 28;
     }
-    let dayList = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const dayList = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     return dayList[month - 1];
 }
-var dataLimt = ref(getDayLimt(date.getFullYear(), date.getMonth() + 1));
-var areaMap = {
+const dataLimt = ref(getDayLimt(date.getFullYear(), date.getMonth() + 1));
+const areaMap = {
     ds: "东区",
     zq: "主校区",
     ql: "启林",
@@ -81,7 +81,7 @@ const selParams = reactive({
     filter: "",
     timeslot: 1,
 });
-var classRoomQueryList = reactive({
+const classRoomQueryList = reactive({
     totalPage: 0,
     pageNo: 1,
     list: [],
@@ -105,7 +105,7 @@ async function classRoomQuery() {
             filter: selParams.filter,
         };
         const result = await reClassRoomQuery(params);
-        if (result.code == 200) {
+        if (result.code && result.code === 200) {
             classRoomQueryList.list = result.data.classRoomQueryList;
             classRoomQueryList.totalPage = result.data.totalPage * 1;
             classRoomQueryList.pageNo = result.data.pageNo * 1;
@@ -115,7 +115,7 @@ async function classRoomQuery() {
 
 //跳转预定教室页面
 function reserveRoom(item) {
-    if (item.arrangeList[selParams.timeslot * 1] != "空闲"){
+    if (item.arrangeList[selParams.timeslot * 1] !== "空闲"){
         Bus.$emit('popMes',{type:'err',text:'当前教室不可用'});
         return;
     } 

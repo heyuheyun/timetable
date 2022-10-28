@@ -144,7 +144,7 @@ function updataList(courseList) {
 async function updata() {
     const result = await reTeachSchedule({ ...data });
     if (result.code && result.code === 200) {
-        if (data.selMode == "week") {
+        if (data.selMode === "week") {
             updataSpanRule(result.data);
             updataList(result.data);
         }

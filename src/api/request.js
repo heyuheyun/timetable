@@ -9,7 +9,7 @@ const request = axios.create({
 
 //请求拦截
 request.interceptors.request.use((config)=>{
-    let token=getToken();
+    const token=getToken();
     if(token){
         config.headers.token=token;
     }

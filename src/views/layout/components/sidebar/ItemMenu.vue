@@ -1,5 +1,5 @@
 <template>
-    <a class="linkto" v-if="!item.children || item.children.length == 0" @click="routeTo(item)" :class="{ active: item.name == route.name }"
+    <a class="linkto" v-if="!item.children || item.children.length === 0" @click="routeTo(item)" :class="{ active: item.name == route.name }"
     @mouseenter="changeTip(item,$event)" @mouseleave="changeTip(false,$event)">
         <span class="tab" v-for="i in tab"></span>
         <i class="iconfont icon" :class="item.meta.icon"></i>
@@ -33,7 +33,7 @@ import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
-var iconFold=ref(true);
+let iconFold=ref(true);
 
 const props = defineProps({
     item: {
@@ -63,9 +63,9 @@ function routeTo(item) {
 //展开或折叠子菜单
 function menuclick(event) {
     iconFold.value=!iconFold.value;
-    let menu = event.currentTarget.nextElementSibling;
+    const menu = event.currentTarget.nextElementSibling;
 
-    if (menu.style.maxHeight == "0px" || menu.style.maxHeight === "") {
+    if (menu.style.maxHeight === "0px" || menu.style.maxHeight === "") {
         let maxheight = getELHeigth(menu.children);
         menu.style.maxHeight = maxheight + "px";
     } else {
@@ -76,10 +76,10 @@ function menuclick(event) {
 function getELHeigth(child) {
     let h = 0;
     for (let i = 0; i < child.length; i++) {
-        if (child[i].className.indexOf("menu-title") != -1 || child[i].className.indexOf("linkto") != -1) {
+        if (child[i].className.indexOf("menu-title") !== -1 || child[i].className.indexOf("linkto") !== -1) {
             h += child[i].clientHeight;
         }
-        if (child[i].className.indexOf("submenu") != -1) {
+        if (child[i].className.indexOf("submenu") !== -1) {
             h += getELHeigth(child[i].children);
         }
     }
@@ -88,7 +88,7 @@ function getELHeigth(child) {
 
 //改变标题提示的位置
 function changeTip(item,event){
-    let rect=event.currentTarget.getBoundingClientRect();
+    const rect=event.currentTarget.getBoundingClientRect();
     if(!item) props.changeMenuTip(0,false);
     else props.changeMenuTip(rect.y,item.meta.title);
 }

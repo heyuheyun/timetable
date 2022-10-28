@@ -1,17 +1,14 @@
 <template>
     <div class="nav-wrap">
         <!-- 缩略菜单 -->
-        <i
-            class="iconfont icon"
-            @click="setStore.siderbarThumbnail = !setStore.siderbarThumbnail"
-            :class="{ 'icon-outdent': !setStore.siderbarThumbnail, 'icon-indent': setStore.siderbarThumbnail }"
-        ></i>
+        <i class="iconfont icon" @click="setStore.siderbarThumbnail = !setStore.siderbarThumbnail"
+        :class="{ 'icon-outdent': !setStore.siderbarThumbnail, 'icon-indent': setStore.siderbarThumbnail }"></i>
 
         <!-- 菜单层级显示 -->
         <span class="menu-level">
             <a class="menulink" @click="router.push({ name: data.menuNav.mainMenu.name })">{{ data.menuNav.mainMenu.meta.title }}</a>
-            <a class="menulink sub" v-for="item in data.menuNav.subMenu" :key="item.meta.title" :class="{ last: !item.children }" 
-            @click="router.push({ name: item.name })">{{item.meta.title}}</a>
+            <a class="menulink sub" v-for="item in data.menuNav.subMenu" :key="item.meta.title" :class="{ last: !item.children }" @click="router.push({ name: item.name })">
+            {{item.meta.title}}</a>
         </span>
 
         <!-- 空白填充 -->
@@ -23,7 +20,7 @@
             <div class="gotoMenu-wrap" v-show="data.searchList">
                 <div class="tri"></div>
                 <div class="gotoMenu" v-for="item in data.searchList" @mousedown="router.push({ name: item.name })" :key="item.title">{{ item.title }}</div>
-                <div class="nodata" v-show="data.searchList && data.searchList.length == 0">No Data</div>
+                <div class="nodata" v-show="data.searchList && data.searchList.length === 0">No Data</div>
             </div>
             <i class="iconfont icon-search right-icon" @mousedown="menuSearch(false, $event)"></i>
         </span>
@@ -44,8 +41,9 @@
             <p class="user-name">{{ userStore.userName }}</p>
             <i class="iconfont icon-angle-down user-arrow"></i>
             <div class="user-menu">
-                <div class="menu" @click="router.push({name:'UserInfo'})">个人信息</div>
-                <div class="menu roleSelect">角色(开发测试)
+                <div class="menu" @click="router.push({ name: 'UserInfo' })">个人信息</div>
+                <div class="menu roleSelect"
+                    >角色(开发测试)
                     <div class="role-wrap">
                         <div @click="selectRole('admin')">管理员</div>
                         <div @click="selectRole('teacher')">教师</div>
@@ -65,7 +63,7 @@ import { reactive, watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useUserStore, useSetStore } from "@/store";
 import { reLogout } from "@/api/common.js";
-import { initCache } from '@/utils/cacheViews';
+import { initCache } from "@/utils/cacheViews";
 
 const route = useRoute();
 const router = useRouter();
@@ -75,22 +73,20 @@ const setStore = useSetStore();
 const showSize = ref();
 const fontDiv = ref();
 const searchInput = ref();
-var fontSetDivisOut = false;
+let fontSetDivisOut = false;
 
 //获得当前菜单层级
 function getMenuNav() {
-    let pathArray = route.path.split("/");
-    let mainMenu = null;
-    let subMenu = [];
+    let [pathArray, mainMenu, subMenu] = [route.path.split("/"), null, []];
     userStore.userRoutes.forEach(item => {
         let temp = item.path.split("/");
-        if (temp[1] == pathArray[1]) mainMenu = item;
+        if (temp[1] === pathArray[1]) mainMenu = item;
     });
     let target = mainMenu;
     for (let i = 2; i < pathArray.length; i++) {
         let nextTarget = null;
         target.children.forEach(item => {
-            if (item.path == pathArray[i]) {
+            if (item.path === pathArray[i]) {
                 nextTarget = item;
             }
         });
@@ -142,15 +138,15 @@ function changeFont() {
 //更新搜索结果
 function getSearchRoute(filevalue = "") {
     //如果输入为空则返回null不显示结果栏
-    if (filevalue == "") return null;
-    let routeArray = [];
-    let getSubRoute = function (subRoutes, faname = "") {
+    if (filevalue === "") return null;
+    const routeArray = [];
+    const getSubRoute = function (subRoutes, faname = "") {
         subRoutes.forEach(item => {
             let tmp = {
-                title: faname == "" ? faname + item.meta.title : faname + ">" + item.meta.title,
+                title: faname === "" ? faname + item.meta.title : faname + ">" + item.meta.title,
                 name: item.name,
             };
-            if (tmp.title.indexOf(filevalue) != -1) {
+            if (tmp.title.indexOf(filevalue) !== -1) {
                 routeArray.push(tmp);
             }
             if (item.children) getSubRoute(item.children, tmp.title);
@@ -173,7 +169,7 @@ function menuSearch(blurFlag = false, event) {
         data.searchList = getSearchRoute();
         return;
     }
-    if (!searchInput.value.style.width || searchInput.value.style.width == "0px") {
+    if (!searchInput.value.style.width || searchInput.value.style.width === "0px") {
         searchInput.value.style.width = 160 + "px";
         searchInput.value.style.padding = "0px 8px";
         searchInput.value.focus();
@@ -184,8 +180,7 @@ function menuSearch(blurFlag = false, event) {
 
 //退出登录
 async function logout() {
-    let result = await reLogout();
-    console.log(result);
+    const result = await reLogout();
     userStore.updataToken(null);
     userStore.resetUserInfo();
     router.push("/login");
@@ -195,10 +190,10 @@ async function logout() {
 function selectRole(role) {
     userStore.role = role;
     const routes = router.getRoutes();
-    let showMenu = [];
+    const showMenu = [];
     //重新计算路由
     routes.forEach(item => {
-        if (!item.meta.hideInMenu && item.path.match(/\//g).length == 1)
+        if (!item.meta.hideInMenu && item.path.match(/\//g).length === 1) 
             if (!item.meta.limit || item.meta.limit.indexOf(userStore.role) != -1) showMenu.push(item);
     });
     userStore.userRoutes = showMenu;

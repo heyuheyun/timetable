@@ -41,7 +41,7 @@ function initTag() {
 function closeTag(index) {
     //如果当前标签是一个缓存项，则清除缓存
     if (data.tagList[index].isCache) {
-        let tagName = data.tagList[index].name;
+        const tagName = data.tagList[index].name;
         for (let i in cacheViewList) {
             if (cacheViewList[i].name === tagName) {
                 cacheViewList.splice(i, 1);
